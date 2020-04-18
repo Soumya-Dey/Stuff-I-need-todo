@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <h1 class="n_heading">Stuff I need to do</h1>
+
+    <div class="container">
+        <div>
+            <h1 class="heading"><%= dayOfWeek %></h1>
+            <h1 class="listName_h1"><%= listName.charAt(0).toUpperCase() + listName.substring(1) %> list</h1>
+
+            <form class="item add_list" action="/new-list" method="post">
+                <input type="text" name="newList" placeholder="Create new list..." autocomplete="off" required>
+                <button type="submit">+</button>
+            </form>
+        </div>
+
+        <div class="box_cont">
+            <div class="box">
+                <form action="/delete" method="post">
+                    <% items.forEach(el => { %>
+                    <div class="item">
+                        <input type="checkbox" name="checkbox" value="<%= el._id %>" onchange="this.form.submit()">
+                        <p><%= el.item %></p>
+                    </div>
+                    <% }) %>
+                    <input type="hidden" name="listName" value="<%= listName %>"></input>
+                </form>
+
+                <form class="item add_new" action="/" method="post">
+                    <input type="text" name="newItem" placeholder="Add new item..." autocomplete="off" required>
+                    <button type="submit" name="list" value="<%= listName %>">+</button>
+                </form>
+            </div>
+
+            <% if (listName !== 'Default') { %>
+            <form class="delete_form" action="/delete-list" method="post">
+                <button class="delete_list" name="deleteBtn" value="<%= listName %>" type="submit">Delete List</button>
+            </form>
+            <% } %>
+        </div>
+
+        <div class="your_lists_cont">
+            <h2 class="your_lists_h2 listName_h1">Your lists</h2>
+
+            <div class="link_cont">
+                <a class="list_link" href="/">
+                    Default <i class="fas fa-angle-right list_icon"></i>
+                </a>
+            </div>
+            <% allLists.forEach(listItem => { %>
+            <div class="link_cont">
+                <a class="list_link" href="<%= listItem.name %>">
+                    <%= listItem.name.charAt(0).toUpperCase() + listItem.name.substring(1) %>
+                    <i class="fas fa-angle-right list_icon"></i>
+                </a>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <%- include('footer') %>
+</body>
+
+</html>
